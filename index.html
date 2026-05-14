@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#071D49" />
+  <title>OPPA Sheet Digitizer · PIES · Pactics Cambodia</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+Khmer:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- React + ReactDOM (UMD) + Babel Standalone -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    body { margin: 0; padding: 0; }
+    .pies-root { font-family: 'IBM Plex Sans', system-ui, sans-serif; color: #1A1A1A; background: #F8F9FA; }
+    .ff-mono { font-family: 'IBM Plex Mono', ui-monospace, monospace; }
+    .ff-khmer { font-family: 'Noto Sans Khmer', 'IBM Plex Sans', sans-serif; }
+
+    .bg-navy { background-color: #071D49; }
+    .bg-indigo { background-color: #10069F; }
+    .bg-orange { background-color: #C45911; }
+    .bg-yellow { background-color: #FFF2CC; }
+    .bg-green-soft { background-color: #EAF5EC; }
+    .bg-alt { background-color: #F2F2F2; }
+    .bg-card { background-color: #FFFFFF; }
+    .bg-page { background-color: #F8F9FA; }
+    .bg-navy-soft { background-color: #F1F3F8; }
+
+    .text-navy { color: #071D49; }
+    .text-orange { color: #C45911; }
+    .text-green { color: #2E7D32; }
+    .text-mute { color: rgba(26,26,26,0.55); }
+    .text-faint { color: rgba(26,26,26,0.40); }
+
+    .border-line { border-color: #D0D0D0; }
+    .border-navy { border-color: #071D49; }
+    .border-orange { border-color: #C45911; }
+    .border-green { border-color: #2E7D32; }
+
+    .btn-primary { background:#071D49; color:white; transition: background-color .15s; }
+    .btn-primary:hover:not(:disabled) { background:#10069F; }
+    .btn-primary:disabled { opacity:.5; cursor:not-allowed; }
+
+    .btn-warn { background:#C45911; color:white; transition: opacity .15s; }
+    .btn-warn:hover:not(:disabled) { opacity:.88; }
+
+    .btn-accent { background:#10069F; color:white; transition: opacity .15s; }
+    .btn-accent:hover:not(:disabled) { opacity:.88; }
+    .btn-accent:disabled { opacity:.5; cursor:not-allowed; }
+
+    .btn-ghost {
+      background:white; color:#1A1A1A;
+      border:1px solid #D0D0D0;
+      transition: all .15s;
+    }
+    .btn-ghost:hover:not(:disabled) { border-color:#071D49; color:#071D49; }
+    .btn-ghost:disabled { opacity:.5; cursor:not-allowed; }
+
+    .dropzone {
+      background-image: radial-gradient(#D0D0D0 1px, transparent 1px);
+      background-size: 24px 24px;
+      border: 2px dashed rgba(7,29,73,0.35);
+      transition: border-color .2s, background-color .2s;
+    }
+    .dropzone:hover { border-color: #071D49; background-color: rgba(7,29,73,0.025); }
+
+    .grid-cell-input {
+      background: transparent;
+      border: 1px solid transparent;
+      padding: 2px 4px;
+      width: 100%;
+      font: inherit;
+      color: inherit;
+    }
+    .grid-cell-input:focus { outline: none; background: white; border-color: #071D49; }
+    .count-uncertain { color:#C45911; font-weight:600; }
+    .khmer-uncertain { color:#C45911; }
+
+    table.oppa-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+    table.oppa-table thead th {
+      background: #071D49; color: white; font-weight: 500;
+      padding: 10px 6px; text-align: left;
+      font-size: 10px; letter-spacing: 0.05em; text-transform: uppercase;
+      border-bottom: 1px solid #071D49;
+    }
+    table.oppa-table thead th.col-total { background: #C45911; text-align: center; }
+    table.oppa-table thead th.col-slot {
+      text-align: center; font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px; padding: 10px 2px; white-space: nowrap;
+    }
+    table.oppa-table tbody tr { border-bottom: 1px solid #E5E5E5; }
+    table.oppa-table tbody tr.row-alt { background: #F8F9FB; }
+    table.oppa-table tbody td { padding: 2px 4px; vertical-align: middle; }
+    table.oppa-table tbody td.cell-total {
+      text-align: center; font-family: 'IBM Plex Mono', monospace;
+      font-weight: 600; background: rgba(196,89,17,0.06);
+    }
+    table.oppa-table tfoot tr { background: #F1F3F8; border-top: 2px solid #071D49; }
+    table.oppa-table tfoot td {
+      padding: 8px 6px; font-family: 'IBM Plex Mono', monospace;
+      font-weight: 700; color: #071D49; text-align: center;
+    }
+    table.oppa-table tfoot td.label-cell {
+      text-align: left; font-size: 10px; letter-spacing: 0.05em; text-transform: uppercase;
+    }
+    table.oppa-table tfoot td.grand { background: #C45911; color: white; }
+    .row-delete {
+      color: rgba(26,26,26,0.30); font-size: 16px; line-height: 1;
+      padding: 0 4px; transition: color .15s;
+      cursor: pointer; background: none; border: none;
+    }
+    .row-delete:hover { color: #C45911; }
+
+    .badge-model {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(255,255,255,0.1);
+      padding: 4px 9px; border-radius: 2px;
+      font-family: 'IBM Plex Mono', monospace; font-size: 10px;
+      color: rgba(255,255,255,0.85); letter-spacing: 0.05em;
+    }
+    .pulse-dot {
+      width: 6px; height: 6px; border-radius: 50%; background: #4ADE80;
+      box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7); }
+      70% { box-shadow: 0 0 0 6px rgba(74, 222, 128, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
+    }
+
+    /* Initial loading state */
+    .boot-loader {
+      display: flex; align-items: center; justify-content: center;
+      min-height: 100vh; flex-direction: column; gap: 12px;
+      font-family: 'IBM Plex Mono', monospace; color: #071D49;
+    }
+    .boot-loader .dot {
+      width: 8px; height: 8px; border-radius: 50%; background: #C45911;
+      animation: bounce 1.4s infinite both;
+    }
+    @keyframes bounce {
+      0%, 80%, 100% { transform: scale(0); }
+      40% { transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+  <div id="root">
+    <div class="boot-loader">
+      <div style="display:flex; gap:6px;">
+        <div class="dot"></div>
+        <div class="dot" style="animation-delay:.16s"></div>
+        <div class="dot" style="animation-delay:.32s"></div>
+      </div>
+      <div style="font-size:11px; letter-spacing:.15em; text-transform:uppercase;">Loading PIES OPPA Digitizer</div>
+    </div>
+  </div>
+
+  <script type="text/babel" data-presets="react">
+    const { useState, useRef, useMemo } = React;
+
+    /* ---------- Inline SVG icons (replacing lucide-react) ---------- */
+    const SvgIcon = ({ size = 24, children, ...rest }) => (
+      <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size}
+           viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...rest}>
+        {children}
+      </svg>
+    );
+
+    const Upload = (p) => <SvgIcon {...p}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></SvgIcon>;
+    const FileImage = (p) => <SvgIcon {...p}><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><circle cx="10" cy="13" r="2"/><path d="m20 17-1.09-1.09a2 2 0 0 0-2.82 0L10 22"/></SvgIcon>;
+    const Loader2 = (p) => <SvgIcon {...p}><path d="M21 12a9 9 0 1 1-6.219-8.56"/></SvgIcon>;
+    const Download = (p) => <SvgIcon {...p}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></SvgIcon>;
+    const RefreshCw = (p) => <SvgIcon {...p}><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 16h5v5"/></SvgIcon>;
+    const Sparkles = (p) => <SvgIcon {...p}><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/><path d="M4 17v2"/><path d="M5 18H3"/></SvgIcon>;
+    const AlertTriangle = (p) => <SvgIcon {...p}><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></SvgIcon>;
+    const FileCode = (p) => <SvgIcon {...p}><path d="M14.5 22H18a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v3"/><polyline points="14 2 14 8 20 8"/><path d="m9 18 3-3-3-3"/><path d="m5 12-3 3 3 3"/></SvgIcon>;
+    const Eye = (p) => <SvgIcon {...p}><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></SvgIcon>;
+    const EyeOff = (p) => <SvgIcon {...p}><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" y1="2" x2="22" y2="22"/></SvgIcon>;
+    const Plus = (p) => <SvgIcon {...p}><path d="M5 12h14"/><path d="M12 5v14"/></SvgIcon>;
+    const X = (p) => <SvgIcon {...p}><path d="M18 6 6 18"/><path d="m6 6 12 12"/></SvgIcon>;
+    const Languages = (p) => <SvgIcon {...p}><path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/></SvgIcon>;
+    const Info = (p) => <SvgIcon {...p}><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></SvgIcon>;
+
+    /* ---------- Constants ---------- */
+    const DEFAULT_SLOTS = [
+      "7-8", "8-9", "9-10", "10-11",
+      "11:30-12:30", "12:30-13:30", "13:30-14:30",
+      "14:30-15:30", "15:30-16:30", "16:30-17:30"
+    ];
+
+    const SUPPORTED_MIME = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    const MODEL_ID = "claude-opus-4-7";
+    const API_ENDPOINT = "/api/claude"; // Same-origin proxy hosted by Cloudflare Pages Function
+
+    const EXTRACTION_PROMPT = `You are extracting data from a handwritten Cambodian factory production tracking sheet (OPPA — Operator Performance Per hour Analysis) from Pactics Cambodia, a soft-goods manufacturer in Siem Reap making bags, pouches, eyewear cases, and weighted vests for brands including Aion, Oakley, and ChicoBag.
+
+═══════════════════════════════════════════════════════════════
+THE FORM
+═══════════════════════════════════════════════════════════════
+
+Header at top: form type (typically "OPPA") and a date in DD.MM.YY format.
+
+Table columns (left → right):
+  1. WorkerID — 9-digit numeric ID, pre-printed
+  2. Worker Name (Khmer) — pre-printed Khmer name
+  3. Product Type — handwritten English text
+  4. OB # — Operation Breakdown number, often empty
+  5. Operation — handwritten Khmer description
+  6–15. Ten hourly time-slot columns with handwritten piece counts:
+     7-8, 8-9, 9-10, 10-11, 11:30-12:30, 12:30-13:30,
+     13:30-14:30, 14:30-15:30, 15:30-16:30, 16:30-17:30
+
+Each WorkerID is repeated in 5 stacked sub-rows so an operator can record multiple operations per day. Many sub-rows are empty.
+
+═══════════════════════════════════════════════════════════════
+KHMER READING GUIDANCE (HIGH PRIORITY)
+═══════════════════════════════════════════════════════════════
+
+This is the hardest part of the task. Read Khmer with maximum care.
+
+Khmer script primer:
+• Consonants: ក ខ គ ឃ ង ច ឆ ជ ឈ ញ ដ ឋ ឌ ឍ ណ ត ថ ទ ធ ន ប ផ ព ភ ម យ រ ល វ ស ហ ឡ អ
+• Independent vowels: ឥ ឦ ឧ ឩ ឪ ឫ ឬ ឭ ឮ ឯ ឰ ឱ ឲ ឳ
+• Vowel signs: ា ិ ី ឹ ឺ ុ ូ ួ ើ ឿ ៀ េ ែ ៃ ោ ៅ
+• Subscripts (coeng): ្ + consonant (sits below the base consonant)
+• Diacritics: ំ ះ ៉ ៊ ់ ៌ ៍ ៎ ៏ ័
+
+Commonly confused character pairs in handwriting:
+• ស vs ច (often look identical in fast handwriting)
+• ត vs ដ vs ឥ
+• ន vs ណ
+• ប vs ភ vs ផ
+• រ vs ឫ vs វ
+• ច vs ខ
+• ឆ vs ច + diacritic
+• ោ vs ៅ
+• ុ vs ូ vs ួ
+
+Cambodian name structure: family name (1–2 syllables) + space + given name (1–3 syllables).
+Common name patterns (illustrative — read what's actually written, do not force a match):
+  Family names: កុន, ឈឹម, រ៉ាន់, លី, ហុក, សុខ, ឈុន, វ៉ាន់, ឆាយ, លឹម, ឈួន, តាន់, ឆុន, ឡុង
+  Given names: សុបិន, សារុន, គូលាប, រស្មី, សុធា, សុភ័ក្ត្រ, វិសាល, ភក្តី, ស៊ីម, រ៉ាវី, សុមាលី, ដារា
+
+Common operation verbs you'll see in column 5:
+  ដេរ (sew), កាត់ (cut), ត្រឹម (trim), បត់ (fold), គូស (mark),
+  ដាក់ (place), ផ្ដិត (press), ត្រួត (inspect), ខ្ចប់ (pack)
+
+Operation phrases often combine verb + product part:
+  ដេរក្បាល = sew the head/top
+  ដេរបន្ទះ = sew the panel
+  កាត់ខ្សែ = cut the strap
+  បត់មាត់ = fold the opening
+
+═══════════════════════════════════════════════════════════════
+EXTRACTION RULES
+═══════════════════════════════════════════════════════════════
+
+• Only include rows that have actual data in Product Type, Operation, OR any hourly count. Skip blank sub-rows.
+• Preserve worker grouping order top to bottom.
+• Counts are 1–3 digit integers. If a digit is genuinely unclear, give your best reading and append "?" (e.g., "50?"). Use null for clearly empty cells.
+• Do NOT invent data. If a cell is truly unreadable, use null.
+• Preserve writer's spelling on Product Type (keep "Duble Chin" if that's what's written — do NOT silently correct to "Double Chin").
+• For Khmer cells: render the cleanest Unicode Khmer reading. If you are unsure between two candidates, pick the most likely and append "?" at the very end of that cell only.
+• Worker IDs and Khmer names are PRE-PRINTED (typed), not handwritten — they are easier to read than the handwritten columns. Read them carefully.
+
+═══════════════════════════════════════════════════════════════
+OUTPUT
+═══════════════════════════════════════════════════════════════
+
+Return ONLY valid JSON — no markdown fences, no preamble, no trailing prose:
+
+{
+  "header": {
+    "form_type": "OPPA",
+    "date": "DD.MM.YY",
+    "notes": ""
+  },
+  "time_slots": ["7-8","8-9","9-10","10-11","11:30-12:30","12:30-13:30","13:30-14:30","14:30-15:30","15:30-16:30","16:30-17:30"],
+  "rows": [
+    {
+      "worker_id": "202403269",
+      "worker_name_khmer": "...",
+      "product_type": "Duble Chin",
+      "ob_number": "",
+      "operation_khmer": "...",
+      "counts": [86, 86, 86, 86, 86, 86, 100, 100, null, null]
+    }
+  ]
+}`;
+
+    const buildRefinePrompt = (rows) => {
+      const rowSummaries = rows.map((r, i) => (
+        `  Row ${i} — WorkerID ${r.worker_id || '(blank)'}, Product "${r.product_type || ''}"
+    Current name guess: "${r.worker_name_khmer || ''}"
+    Current operation guess: "${r.operation_khmer || ''}"`
+      )).join('\n');
+
+      return `You are an expert reader of Cambodian Khmer script. The user is unhappy with the Khmer text accuracy on a first-pass extraction of this OPPA factory tracking sheet. Re-read the Khmer text in the image with MAXIMUM care.
+
+═══════════════════════════════════════════════════════════════
+CONTEXT FROM FIRST PASS
+═══════════════════════════════════════════════════════════════
+
+The layout and English data are already extracted. Below are the rows in the order they appear top-to-bottom in the table, with their current (possibly incorrect) Khmer readings:
+
+${rowSummaries}
+
+═══════════════════════════════════════════════════════════════
+YOUR JOB
+═══════════════════════════════════════════════════════════════
+
+For each row above, look ONLY at:
+  • Column 2 — Worker Name (Khmer, PRE-PRINTED text)
+  • Column 5 — Operation (Khmer, HANDWRITTEN text)
+
+Find the matching row in the image by WorkerID and product context, then give the most accurate Khmer reading possible.
+
+═══════════════════════════════════════════════════════════════
+KHMER READING GUIDANCE
+═══════════════════════════════════════════════════════════════
+
+Khmer name structure: family name + space + given name. Both can be 1–3 syllables.
+
+Visually similar pairs — be especially careful:
+  ស ↔ ច        ត ↔ ដ        ន ↔ ណ        ប ↔ ភ ↔ ផ
+  រ ↔ ឫ ↔ វ    ឆ ↔ ច        ោ ↔ ៅ        ុ ↔ ូ ↔ ួ
+  ឈ ↔ ឃ        ង ↔ ច        ល ↔ ឡ
+
+Worker names in column 2 are PRINTED (typeset), not handwritten — read each character cleanly.
+
+Operation descriptions in column 5 are HANDWRITTEN. Common verbs:
+  ដេរ = sew      កាត់ = cut    ត្រឹម = trim    បត់ = fold
+  គូស = mark    ផ្ដិត = press  ត្រួត = inspect ខ្ចប់ = pack
+
+═══════════════════════════════════════════════════════════════
+PROCEDURE
+═══════════════════════════════════════════════════════════════
+
+For each row:
+  1. Locate the matching row in the image (use WorkerID + product as anchor).
+  2. Read the Khmer name character-by-character. Verify each consonant, subscript, vowel.
+  3. Read the operation description carefully.
+  4. If you're genuinely uncertain between two candidate spellings, pick the most likely and append "?" to that cell.
+  5. If the cell is truly unreadable, return an empty string "".
+
+Return ONLY valid JSON — no markdown fences, no preamble:
+
+{
+  "refined": [
+    {"index": 0, "worker_name_khmer": "...", "operation_khmer": "..."},
+    {"index": 1, "worker_name_khmer": "...", "operation_khmer": "..."}
+  ]
+}
+
+The "index" must match the Row number above so I can merge correctly.`;
+    };
+
+    /* ---------- App component ---------- */
+    function OPPADigitizer() {
+      const [imageFile, setImageFile] = useState(null);
+      const [imagePreview, setImagePreview] = useState(null);
+      const [extracted, setExtracted] = useState(null);
+      const [loading, setLoading] = useState(false);
+      const [refining, setRefining] = useState(false);
+      const [error, setError] = useState(null);
+      const [rawResponse, setRawResponse] = useState('');
+      const [showImage, setShowImage] = useState(true);
+      const [refineMessage, setRefineMessage] = useState('');
+      const fileInputRef = useRef(null);
+
+      const handleFile = (file) => {
+        if (!file) return;
+        if (!SUPPORTED_MIME.includes(file.type)) {
+          setError(`Unsupported image type "${file.type || 'unknown'}". Use PNG, JPG, GIF, or WebP. (HEIC must be converted first.)`);
+          return;
+        }
+        setError(null);
+        setRawResponse('');
+        setRefineMessage('');
+        setImageFile(file);
+        setExtracted(null);
+        const reader = new FileReader();
+        reader.onload = (e) => setImagePreview(e.target.result);
+        reader.readAsDataURL(file);
+      };
+
+      const onDrop = (e) => {
+        e.preventDefault();
+        if (e.dataTransfer.files && e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+      };
+
+      const fileToBase64 = (file) => new Promise((resolve, reject) => {
+        const r = new FileReader();
+        r.onload = () => resolve(r.result.split(',')[1]);
+        r.onerror = () => reject(new Error('Could not read image file'));
+        r.readAsDataURL(file);
+      });
+
+      const callClaude = async (prompt, base64, mediaType) => {
+        const response = await fetch(API_ENDPOINT, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            model: MODEL_ID,
+            max_tokens: 6000,
+            messages: [{
+              role: "user",
+              content: [
+                { type: "image", source: { type: "base64", media_type: mediaType, data: base64 } },
+                { type: "text", text: prompt }
+              ]
+            }]
+          })
+        });
+        if (!response.ok) {
+          const errText = await response.text();
+          throw new Error(`API error ${response.status}: ${errText.slice(0, 400)}`);
+        }
+        const data = await response.json();
+        let text = (data.content || [])
+          .filter(b => b.type === 'text')
+          .map(b => b.text || '')
+          .join('');
+        return text;
+      };
+
+      const parseJSON = (text) => {
+        text = text.replace(/```json\s*/g, '').replace(/```\s*$/g, '').trim();
+        const start = text.indexOf('{');
+        const end = text.lastIndexOf('}');
+        if (start < 0 || end < 0) throw new Error('No JSON object found in response');
+        return JSON.parse(text.slice(start, end + 1));
+      };
+
+      const extractData = async () => {
+        if (!imageFile) return;
+        setLoading(true);
+        setError(null);
+        setRawResponse('');
+        setRefineMessage('');
+
+        try {
+          const base64 = await fileToBase64(imageFile);
+          const text = await callClaude(EXTRACTION_PROMPT, base64, imageFile.type);
+          setRawResponse(text);
+          const parsed = parseJSON(text);
+
+          const slots = (parsed.time_slots && parsed.time_slots.length === 10) ? parsed.time_slots : DEFAULT_SLOTS;
+          parsed.time_slots = slots;
+          parsed.header = parsed.header || { form_type: 'OPPA', date: '', notes: '' };
+          parsed.rows = (parsed.rows || []).map(r => ({
+            worker_id: r.worker_id || '',
+            worker_name_khmer: r.worker_name_khmer || '',
+            product_type: r.product_type || '',
+            ob_number: r.ob_number || '',
+            operation_khmer: r.operation_khmer || '',
+            counts: Array.from({ length: slots.length }, (_, i) =>
+              (r.counts && r.counts[i] !== undefined) ? r.counts[i] : null
+            )
+          }));
+          setExtracted(parsed);
+        } catch (e) {
+          setError(`Extraction failed: ${e.message}`);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      const refineKhmer = async () => {
+        if (!imageFile || !extracted) return;
+        setRefining(true);
+        setError(null);
+        setRefineMessage('');
+
+        try {
+          const base64 = await fileToBase64(imageFile);
+          const prompt = buildRefinePrompt(extracted.rows);
+          const text = await callClaude(prompt, base64, imageFile.type);
+          setRawResponse(text);
+          const parsed = parseJSON(text);
+
+          if (!Array.isArray(parsed.refined)) {
+            throw new Error('Refined response missing "refined" array');
+          }
+
+          let updated = 0;
+          setExtracted(prev => {
+            const next = { ...prev, rows: prev.rows.map(r => ({ ...r })) };
+            parsed.refined.forEach(ref => {
+              const idx = ref.index;
+              if (typeof idx === 'number' && idx >= 0 && idx < next.rows.length) {
+                if (ref.worker_name_khmer !== undefined) {
+                  next.rows[idx].worker_name_khmer = ref.worker_name_khmer;
+                }
+                if (ref.operation_khmer !== undefined) {
+                  next.rows[idx].operation_khmer = ref.operation_khmer;
+                }
+                updated++;
+              }
+            });
+            return next;
+          });
+          setRefineMessage(`Refined Khmer text on ${updated} row${updated === 1 ? '' : 's'}. Verify against the source image.`);
+        } catch (e) {
+          setError(`Khmer refinement failed: ${e.message}`);
+        } finally {
+          setRefining(false);
+        }
+      };
+
+      const updateCell = (rowIdx, field, value) => {
+        setExtracted(prev => {
+          const next = { ...prev, rows: [...prev.rows] };
+          next.rows[rowIdx] = { ...next.rows[rowIdx], [field]: value };
+          return next;
+        });
+      };
+
+      const updateCount = (rowIdx, slotIdx, value) => {
+        setExtracted(prev => {
+          const next = { ...prev, rows: [...prev.rows] };
+          const newCounts = [...next.rows[rowIdx].counts];
+          const trimmed = (value == null ? '' : value).toString().trim();
+          newCounts[slotIdx] = trimmed === ''
+            ? null
+            : (isNaN(Number(trimmed)) || trimmed.includes('?') ? trimmed : Number(trimmed));
+          next.rows[rowIdx] = { ...next.rows[rowIdx], counts: newCounts };
+          return next;
+        });
+      };
+
+      const updateHeader = (field, value) => {
+        setExtracted(prev => ({ ...prev, header: { ...prev.header, [field]: value } }));
+      };
+
+      const addRow = () => {
+        setExtracted(prev => ({
+          ...prev,
+          rows: [...prev.rows, {
+            worker_id: '', worker_name_khmer: '', product_type: '',
+            ob_number: '', operation_khmer: '',
+            counts: Array(prev.time_slots.length).fill(null)
+          }]
+        }));
+      };
+
+      const deleteRow = (idx) => {
+        setExtracted(prev => ({ ...prev, rows: prev.rows.filter((_, i) => i !== idx) }));
+      };
+
+      const rowTotal = (counts) =>
+        counts.reduce((s, c) => s + (typeof c === 'number' ? c : 0), 0);
+
+      const colTotals = useMemo(() => {
+        if (!extracted) return [];
+        return extracted.time_slots.map((_, slotIdx) =>
+          extracted.rows.reduce((s, r) =>
+            s + (typeof r.counts[slotIdx] === 'number' ? r.counts[slotIdx] : 0), 0)
+        );
+      }, [extracted]);
+
+      const grandTotal = useMemo(() => colTotals.reduce((a, b) => a + b, 0), [colTotals]);
+
+      const workerCount = useMemo(() => {
+        if (!extracted) return 0;
+        const ids = new Set(extracted.rows.map(r => r.worker_id).filter(Boolean));
+        return ids.size;
+      }, [extracted]);
+
+      const exportCSV = () => {
+        if (!extracted) return;
+        const escape = (v) => {
+          const s = (v == null ? '' : v).toString();
+          return (s.includes(',') || s.includes('"') || s.includes('\n'))
+            ? '"' + s.replace(/"/g, '""') + '"'
+            : s;
+        };
+        const headers = ['WorkerID', 'Worker Name (Khmer)', 'Product Type', 'OB #', 'Operation',
+          ...extracted.time_slots, 'Daily Total'];
+        const lines = [headers.map(escape).join(',')];
+        extracted.rows.forEach(r => {
+          const cells = [
+            r.worker_id, r.worker_name_khmer, r.product_type, r.ob_number, r.operation_khmer,
+            ...r.counts.map(c => c == null ? '' : c), rowTotal(r.counts)
+          ];
+          lines.push(cells.map(escape).join(','));
+        });
+        lines.push(['TOTAL', '', '', '', '', ...colTotals, grandTotal].map(escape).join(','));
+        const csv = '\uFEFF' + lines.join('\n');
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `OPPA_${(extracted.header.date || 'sheet').replace(/[^\w.-]/g, '_')}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+      };
+
+      const exportJSON = () => {
+        if (!extracted) return;
+        const blob = new Blob([JSON.stringify(extracted, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `OPPA_${(extracted.header.date || 'sheet').replace(/[^\w.-]/g, '_')}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+      };
+
+      const reset = () => {
+        setImageFile(null);
+        setImagePreview(null);
+        setExtracted(null);
+        setError(null);
+        setRawResponse('');
+        setRefineMessage('');
+      };
+
+      return (
+        <div className="min-h-screen pies-root">
+          {/* Header */}
+          <header className="bg-navy" style={{ borderBottom: '4px solid #C45911' }}>
+            <div className="px-8 py-5 flex items-center justify-between" style={{ maxWidth: 1600, margin: '0 auto' }}>
+              <div className="flex items-center gap-6">
+                <div className="ff-mono text-white font-bold" style={{ fontSize: 24, letterSpacing: '0.2em' }}>PIES</div>
+                <div style={{ height: 32, width: 1, background: 'rgba(255,255,255,0.25)' }}></div>
+                <div>
+                  <div className="ff-mono text-xs uppercase" style={{ color: 'rgba(255,255,255,0.6)', letterSpacing: '0.15em' }}>
+                    Pactics Industrial Engineering System
+                  </div>
+                  <div className="text-base font-semibold text-white" style={{ letterSpacing: '-0.01em' }}>
+                    OPPA Sheet Digitizer
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="badge-model">
+                  <span className="pulse-dot"></span>
+                  {MODEL_ID}
+                </span>
+                <div className="ff-mono text-xs uppercase" style={{ color: 'rgba(255,255,255,0.5)', letterSpacing: '0.1em' }}>
+                  v0.3 · Siem Reap
+                </div>
+              </div>
+            </div>
+          </header>
+
+          <main className="px-8 py-8" style={{ maxWidth: 1600, margin: '0 auto' }}>
+
+            {/* STAGE 1: Upload */}
+            {!imagePreview && (
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div className="lg:col-span-2">
+                  <div
+                    onDrop={onDrop}
+                    onDragOver={(e) => e.preventDefault()}
+                    onClick={() => fileInputRef.current && fileInputRef.current.click()}
+                    className="dropzone bg-card flex flex-col items-center justify-center cursor-pointer p-12 text-center"
+                    style={{ aspectRatio: '4/3' }}
+                  >
+                    <div className="flex items-center justify-center mb-6 border-2 border-navy" style={{ width: 80, height: 80 }}>
+                      <FileImage strokeWidth={1.5} className="text-navy" size={40} />
+                    </div>
+                    <div className="text-2xl font-semibold mb-2 text-navy" style={{ letterSpacing: '-0.01em' }}>
+                      Drop OPPA sheet image here
+                    </div>
+                    <div className="ff-mono text-sm text-mute mb-6">
+                      or click to browse · PNG / JPG / WebP
+                    </div>
+                    <button className="btn-primary ff-mono px-6 py-3 text-sm uppercase flex items-center gap-2" style={{ letterSpacing: '0.15em' }}>
+                      <Upload size={16} />
+                      Select image
+                    </button>
+                    <input
+                      ref={fileInputRef} type="file" accept="image/*" className="hidden"
+                      onChange={(e) => handleFile(e.target.files && e.target.files[0])}
+                    />
+                  </div>
+                </div>
+
+                <aside className="bg-card border border-line p-6">
+                  <div className="mb-5">
+                    <div className="ff-mono text-xs uppercase text-orange mb-1" style={{ letterSpacing: '0.15em' }}>How it works</div>
+                    <div className="text-lg font-semibold text-navy" style={{ letterSpacing: '-0.01em' }}>Three steps</div>
+                  </div>
+                  <ol className="space-y-4 text-sm">
+                    {[
+                      { n: '01', t: 'Upload the sheet photo', d: 'Clear, flat, well-lit shots work best. Avoid heavy shadow or skew.' },
+                      { n: '02', t: 'Claude Opus 4.7 reads it', d: 'Khmer names, English product types, OB numbers, and the 10-column hourly grid extracted to a structured table.' },
+                      { n: '03', t: 'Refine Khmer & export', d: 'Hit "Refine Khmer" for a focused second pass if names look wrong. Edit any cell. Then download CSV or JSON.' }
+                    ].map(s => (
+                      <li key={s.n} className="flex gap-4">
+                        <div className="ff-mono text-xs text-orange" style={{ width: 24, flexShrink: 0, paddingTop: 2 }}>{s.n}</div>
+                        <div>
+                          <div className="font-semibold text-navy">{s.t}</div>
+                          <div className="text-mute mt-1" style={{ fontSize: 12 }}>{s.d}</div>
+                        </div>
+                      </li>
+                    ))}
+                  </ol>
+                  <div className="mt-6 pt-4 border-t border-line ff-mono text-xs text-faint">
+                    OPPA · Operator Performance Per Hour Analysis
+                  </div>
+                </aside>
+              </div>
+            )}
+
+            {/* STAGE 2: Review + Extract */}
+            {imagePreview && !extracted && (
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div className="lg:col-span-2 bg-card border border-line p-4">
+                  <img src={imagePreview} alt="OPPA sheet" style={{ width: '100%', height: 'auto', display: 'block' }} />
+                </div>
+                <aside className="bg-card border border-line p-6">
+                  <div className="mb-4">
+                    <div className="ff-mono text-xs uppercase text-orange mb-1" style={{ letterSpacing: '0.15em' }}>
+                      {loading ? 'Reading sheet' : 'Image loaded'}
+                    </div>
+                    <div className="text-xl font-semibold text-navy" style={{ letterSpacing: '-0.01em' }}>
+                      {loading ? 'Working...' : 'Ready to extract'}
+                    </div>
+                  </div>
+                  <p className="text-sm text-mute leading-relaxed mb-5">
+                    Claude Opus 4.7 will read the worker IDs, Khmer names, product types, OB numbers, and all hourly counts. This usually takes 20–40 seconds.
+                  </p>
+                  <button
+                    onClick={extractData}
+                    disabled={loading}
+                    className="btn-primary ff-mono w-full px-6 py-4 text-sm uppercase flex items-center justify-center gap-2 mb-3"
+                    style={{ letterSpacing: '0.15em' }}
+                  >
+                    {loading ? (
+                      <><Loader2 size={16} className="animate-spin" /> Reading sheet...</>
+                    ) : (
+                      <><Sparkles size={16} /> Extract table</>
+                    )}
+                  </button>
+                  <button
+                    onClick={reset} disabled={loading}
+                    className="btn-ghost ff-mono w-full px-6 py-3 text-sm uppercase"
+                    style={{ letterSpacing: '0.15em' }}
+                  >
+                    Choose different image
+                  </button>
+                </aside>
+              </div>
+            )}
+
+            {/* STAGE 3: Extracted */}
+            {extracted && (
+              <div>
+                {/* Action bar */}
+                <div className="flex flex-wrap items-center justify-between gap-3 mb-5 pb-4 border-b border-line">
+                  <div className="flex items-center gap-5 flex-wrap">
+                    <div className="ff-mono text-xs uppercase text-orange" style={{ letterSpacing: '0.15em' }}>Sheet header</div>
+                    <div className="flex items-center gap-2">
+                      <label className="ff-mono text-xs text-mute">FORM</label>
+                      <input
+                        value={extracted.header.form_type || ''}
+                        onChange={(e) => updateHeader('form_type', e.target.value)}
+                        className="ff-mono text-sm px-2 py-1 border border-line"
+                        style={{ width: 80 }}
+                      />
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <label className="ff-mono text-xs text-mute">DATE</label>
+                      <input
+                        value={extracted.header.date || ''}
+                        onChange={(e) => updateHeader('date', e.target.value)}
+                        className="ff-mono text-sm px-2 py-1 border border-line"
+                        style={{ width: 110 }}
+                        placeholder="DD.MM.YY"
+                      />
+                    </div>
+                    <div className="ff-mono text-xs text-faint">
+                      {extracted.rows.length} rows · {workerCount} workers
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <button
+                      onClick={refineKhmer}
+                      disabled={refining || loading || extracted.rows.length === 0}
+                      className="btn-accent ff-mono text-xs uppercase px-4 py-2 flex items-center gap-2"
+                      style={{ letterSpacing: '0.1em' }}
+                      title="Re-read only the Khmer cells with focused, language-specific prompting"
+                    >
+                      {refining ? (
+                        <><Loader2 size={14} className="animate-spin" /> Refining...</>
+                      ) : (
+                        <><Languages size={14} /> Refine Khmer</>
+                      )}
+                    </button>
+                    <button
+                      onClick={() => setShowImage(s => !s)}
+                      className="btn-ghost ff-mono text-xs uppercase px-3 py-2 flex items-center gap-2"
+                      style={{ letterSpacing: '0.1em' }}
+                    >
+                      {showImage ? <EyeOff size={14} /> : <Eye size={14} />}
+                      {showImage ? 'Hide image' : 'Show image'}
+                    </button>
+                    <button
+                      onClick={exportJSON}
+                      className="btn-ghost ff-mono text-xs uppercase px-3 py-2 flex items-center gap-2"
+                      style={{ letterSpacing: '0.1em' }}
+                    >
+                      <FileCode size={14} /> JSON
+                    </button>
+                    <button
+                      onClick={exportCSV}
+                      className="btn-primary ff-mono text-xs uppercase px-4 py-2 flex items-center gap-2"
+                      style={{ letterSpacing: '0.1em' }}
+                    >
+                      <Download size={14} /> Export CSV
+                    </button>
+                    <button
+                      onClick={reset}
+                      className="btn-warn ff-mono text-xs uppercase px-3 py-2 flex items-center gap-2"
+                      style={{ letterSpacing: '0.1em' }}
+                    >
+                      <RefreshCw size={14} /> New
+                    </button>
+                  </div>
+                </div>
+
+                {/* Refine success message */}
+                {refineMessage && (
+                  <div className="bg-green-soft border border-green p-3 mb-4 flex items-start gap-3">
+                    <Info size={16} style={{ color: '#2E7D32', flexShrink: 0, marginTop: 2 }} />
+                    <div className="text-sm text-green flex-1">{refineMessage}</div>
+                    <button onClick={() => setRefineMessage('')} className="text-green hover:opacity-70">
+                      <X size={14} />
+                    </button>
+                  </div>
+                )}
+
+                {/* Khmer tip banner */}
+                <div className="bg-navy-soft border border-line p-3 mb-4 flex items-start gap-3">
+                  <Info size={16} style={{ color: '#071D49', flexShrink: 0, marginTop: 2 }} />
+                  <div className="text-sm flex-1">
+                    <span className="font-semibold text-navy">Khmer text accuracy:</span>
+                    <span className="text-mute"> Handwritten Khmer is the hardest part of OCR. If a name or operation looks wrong, click </span>
+                    <span className="ff-mono text-navy" style={{ fontWeight: 600 }}>Refine Khmer</span>
+                    <span className="text-mute"> to re-read only those cells with deeper language-specific prompting, or edit them directly. Cells ending in "?" mean Claude wasn't fully sure.</span>
+                  </div>
+                </div>
+
+                {/* Image + Table */}
+                <div className="grid gap-6" style={{ gridTemplateColumns: showImage ? '380px 1fr' : '1fr' }}>
+                  {showImage && (
+                    <div className="bg-card border border-line p-3" style={{ alignSelf: 'start', position: 'sticky', top: 16 }}>
+                      <img src={imagePreview} alt="OPPA sheet" style={{ width: '100%', height: 'auto', display: 'block' }} />
+                      <div className="ff-mono text-xs text-faint mt-2 text-center">Source image (reference)</div>
+                    </div>
+                  )}
+
+                  <div className="bg-card border border-line" style={{ overflowX: 'auto', position: 'relative' }}>
+                    {refining && (
+                      <div style={{
+                        position: 'absolute', inset: 0, background: 'rgba(255,255,255,0.7)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10
+                      }}>
+                        <div className="bg-card border border-navy px-5 py-4 flex items-center gap-3">
+                          <Loader2 className="animate-spin text-navy" size={20} />
+                          <div>
+                            <div className="ff-mono text-xs uppercase text-orange" style={{ letterSpacing: '0.15em' }}>Refining</div>
+                            <div className="text-sm font-semibold text-navy">Re-reading Khmer cells...</div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    <table className="oppa-table">
+                      <thead>
+                        <tr>
+                          <th>Worker ID</th>
+                          <th>Name (KH)</th>
+                          <th>Product</th>
+                          <th>OB#</th>
+                          <th>Operation</th>
+                          {extracted.time_slots.map((s, i) => <th key={i} className="col-slot">{s}</th>)}
+                          <th className="col-total">Total</th>
+                          <th style={{ width: 28 }}></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {extracted.rows.length === 0 && (
+                          <tr>
+                            <td colSpan={extracted.time_slots.length + 7} style={{ padding: 24, textAlign: 'center' }} className="text-mute text-sm">
+                              No data rows extracted. Add one manually below, or try a clearer photo.
+                            </td>
+                          </tr>
+                        )}
+                        {extracted.rows.map((row, idx) => {
+                          const nameUncertain = (row.worker_name_khmer || '').includes('?');
+                          const opUncertain = (row.operation_khmer || '').includes('?');
+                          return (
+                            <tr key={idx} className={idx % 2 === 1 ? 'row-alt' : ''}>
+                              <td>
+                                <input
+                                  value={row.worker_id || ''}
+                                  onChange={(e) => updateCell(idx, 'worker_id', e.target.value)}
+                                  className="grid-cell-input ff-mono"
+                                  style={{ width: 100, fontSize: 11 }}
+                                />
+                              </td>
+                              <td>
+                                <input
+                                  value={row.worker_name_khmer || ''}
+                                  onChange={(e) => updateCell(idx, 'worker_name_khmer', e.target.value)}
+                                  className={`grid-cell-input ff-khmer ${nameUncertain ? 'khmer-uncertain' : ''}`}
+                                  style={{ width: 120, fontSize: 14 }}
+                                />
+                              </td>
+                              <td>
+                                <input
+                                  value={row.product_type || ''}
+                                  onChange={(e) => updateCell(idx, 'product_type', e.target.value)}
+                                  className="grid-cell-input"
+                                  style={{ width: 100, fontSize: 11 }}
+                                />
+                              </td>
+                              <td>
+                                <input
+                                  value={row.ob_number || ''}
+                                  onChange={(e) => updateCell(idx, 'ob_number', e.target.value)}
+                                  className="grid-cell-input ff-mono"
+                                  style={{ width: 60, fontSize: 11 }}
+                                />
+                              </td>
+                              <td>
+                                <input
+                                  value={row.operation_khmer || ''}
+                                  onChange={(e) => updateCell(idx, 'operation_khmer', e.target.value)}
+                                  className={`grid-cell-input ff-khmer ${opUncertain ? 'khmer-uncertain' : ''}`}
+                                  style={{ width: 150, fontSize: 14 }}
+                                />
+                              </td>
+                              {row.counts.map((c, i) => {
+                                const isUncertain = typeof c === 'string' && c.includes('?');
+                                return (
+                                  <td key={i}>
+                                    <input
+                                      value={c == null ? '' : c}
+                                      onChange={(e) => updateCount(idx, i, e.target.value)}
+                                      className={`grid-cell-input ff-mono ${isUncertain ? 'count-uncertain' : ''}`}
+                                      style={{ width: 44, fontSize: 11, textAlign: 'center' }}
+                                    />
+                                  </td>
+                                );
+                              })}
+                              <td className="cell-total">{rowTotal(row.counts) || ''}</td>
+                              <td>
+                                <button onClick={() => deleteRow(idx)} className="row-delete" title="Delete row">×</button>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                      {extracted.rows.length > 0 && (
+                        <tfoot>
+                          <tr>
+                            <td colSpan={5} className="label-cell">Column total</td>
+                            {colTotals.map((t, i) => <td key={i}>{t || ''}</td>)}
+                            <td className="grand">{grandTotal}</td>
+                            <td></td>
+                          </tr>
+                        </tfoot>
+                      )}
+                    </table>
+                    <div className="border-t border-line p-3">
+                      <button onClick={addRow} className="ff-mono text-xs uppercase text-navy flex items-center gap-1 hover:opacity-70" style={{ letterSpacing: '0.1em' }}>
+                        <Plus size={14} /> Add row
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-4 ff-mono text-xs text-faint flex items-center gap-3 flex-wrap">
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                    <span style={{ width: 8, height: 8, background: '#C45911', display: 'inline-block' }}></span>
+                    Orange = Claude was unsure — verify against the image
+                  </span>
+                </div>
+              </div>
+            )}
+
+            {/* Error panel */}
+            {error && !loading && !refining && (
+              <div className="mt-5 bg-yellow border border-orange p-4 flex items-start gap-3">
+                <AlertTriangle size={20} style={{ color: '#C45911', flexShrink: 0, marginTop: 2 }} />
+                <div className="flex-1 text-sm">
+                  <div className="font-semibold text-orange">Something went wrong</div>
+                  <div className="ff-mono text-xs mt-1" style={{ color: '#1A1A1A' }}>{error}</div>
+                  {rawResponse && (
+                    <details className="mt-3">
+                      <summary className="cursor-pointer text-xs underline text-mute">Show raw model response</summary>
+                      <pre className="mt-2 p-2 bg-card border border-line" style={{ fontSize: 10, overflow: 'auto', maxHeight: 240 }}>
+                        {rawResponse}
+                      </pre>
+                    </details>
+                  )}
+                </div>
+                <button onClick={() => setError(null)} className="text-mute hover:text-orange">
+                  <X size={16} />
+                </button>
+              </div>
+            )}
+          </main>
+
+          <footer className="border-t border-line bg-card mt-12">
+            <div className="px-8 py-4 flex items-center justify-between ff-mono text-xs text-faint" style={{ maxWidth: 1600, margin: '0 auto' }}>
+              <div>Pactics Cambodia · PIES IE Tooling</div>
+              <div>Two-pass extraction · Opus 4.7 vision · Khmer / English / Numbers</div>
+            </div>
+          </footer>
+        </div>
+      );
+    }
+
+    /* ---------- Mount ---------- */
+    ReactDOM.render(<OPPADigitizer />, document.getElementById('root'));
+  </script>
+</body>
+</html>
